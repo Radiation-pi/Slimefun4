@@ -54,16 +54,25 @@ class EnvironmentChecker {
     }
 
     static void scheduleSlimeGlueCheck(@Nonnull Slimefun sf) {
-        Bukkit.getScheduler()
-                .runTaskLater(
-                        sf,
-                        () -> {
-                            if (Bukkit.getPluginManager().getPlugin("SlimeGlue") == null) {
-                                sf.getLogger().log(Level.WARNING, "检测到没有安装 SlimeGlue (粘液胶), 你将缺失对一些插件的额外保护检查!");
-                                sf.getLogger().log(Level.WARNING, "下载: https://github.com/Xzavier0722/SlimeGlue");
-                            }
-                        },
-                        300); // 15s
+        Bukkit.getScheduler().runTaskLater(sf, () -> {
+            List<String> requiredPlugins = List.of("KingdomsX", "Magic", "Quickshop-Reremake", "LockettePro");
+            List<String> missingPlugins = requiredPlugins.stream()
+                    .filter(pluginName -> Bukkit.getPluginManager().getPlugin(pluginName) != null)
+                    .toList();
+
+            if (!missingPlugins.isEmpty() && Bukkit.getPluginManager().getPlugin("SlimeGlue") == null) {
+                printBorder(sf.getLogger());
+                sf.getLogger().log(Level.WARNING, "");
+                sf.getLogger().log(Level.WARNING, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                sf.getLogger().log(Level.WARNING, "检测到和 Slimefun 会出现 bug 的插件", String.join(", ", missingPlugins));
+                sf.getLogger().log(Level.WARNING, "这些插件需要 SlimeGlue 提供额外的保护检查.");
+                sf.getLogger().log(Level.WARNING, "请下载并安装 SlimeGlue 以确保这些插件正常工作.");
+                sf.getLogger().log(Level.WARNING, "下载: https://github.com/Xzavier0722/SlimeGlue");
+                sf.getLogger().log(Level.WARNING, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                sf.getLogger().log(Level.WARNING, "");
+                printBorder(sf.getLogger());
+            }
+        }, 300); // 15s
     }
 
     private static void printBorder(@Nonnull Logger logger) {
