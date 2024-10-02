@@ -37,7 +37,14 @@ jobs:
         name: Upload Beta artifact
         with:
           name: Slimefun Beta Build
-          path: staging
+          path: target/*.jar
+      - name: Download Beta artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: Slimefun Beta Build
+          path: downloaded_artifacts
+      - name: List downloaded files
+        run: ls -R downloaded_artifacts
       - name: Automatic Releases
         uses: marvinpinto/action-automatic-releases@v1.2.1
         if: github.ref_name == 'master'
