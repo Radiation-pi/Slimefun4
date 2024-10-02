@@ -27,6 +27,8 @@ jobs:
           java-package: jdk
           architecture: x64
           cache: maven
+      - name: Format Code
+        run: mvn -s .mvn/settings.xml -B spotless:apply
       - name: Codestyle Check
         run: mvn -s .mvn/settings.xml -B spotless:check --errors
       - name: Build Slimefun
